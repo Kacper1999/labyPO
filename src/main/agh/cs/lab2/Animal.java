@@ -2,8 +2,12 @@ package agh.cs.lab2;
 
 public class Animal {
     private MapDirection direction = MapDirection.NORTH;
-    private Vector2d position;
+    private Vector2d position = new Vector2d(2, 2);
     private IWorldMap map;
+
+    Animal(IWorldMap map) {
+        this.map = map;
+    }
 
     Animal(IWorldMap map, Vector2d initialPosition) {
         this.position = initialPosition;
@@ -11,17 +15,17 @@ public class Animal {
     }
 
     public String toString() {
-        switch(this.direction) {
+        switch (this.direction) {
             case NORTH:
-                return("N");
+                return ("N");
             case SOUTH:
-                return("S");
+                return ("S");
             case EAST:
-                return("E");
+                return ("E");
             case WEST:
-                return("W");
+                return ("W");
             default:
-                return("");
+                return ("");
         }
     }
 
@@ -33,13 +37,8 @@ public class Animal {
         return (this.direction);
     }
 
-    IWorldMap getMap() {
-        return (this.map);
-    }
-
     void move(MoveDirection direction) {
         Vector2d check;
-
         switch (direction) {
             case RIGHT:
                 this.direction = this.direction.next();
@@ -61,13 +60,6 @@ public class Animal {
                 break;
             default:
                 break;
-        }
-    }
-
-    void executeOrders(MoveDirection[] orders) {
-        int len = orders.length;
-        for (MoveDirection order : orders) {
-            this.move(order);
         }
     }
 }

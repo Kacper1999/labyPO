@@ -1,5 +1,12 @@
 package agh.cs.lab2;
 
+/**
+ * The interface responsible for interacting with the map of the world.
+ * Assumes that Vector2d and MoveDirection classes are defined.
+ *
+ * @author apohllo
+ *
+ */
 public interface IWorldMap {
     /**
      * Indicate if any object can move to the given position.

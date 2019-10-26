@@ -5,16 +5,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RectangularMap implements IWorldMap {
-    int width;
-    int height;
-    Animal[][] map;
-    List<Animal> animals = new ArrayList<>();
+    private int width;
+    private int height;
+    private Animal[][] map;
+    private List<Animal> animals = new ArrayList<>();
 
 
     RectangularMap(int width, int height) {
         this.width = width;
-        this. height = height;
-         map = new Animal[width + 1][height + 1];
+        this.height = height;
+        map = new Animal[width + 1][height + 1];
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 map[i][j] = null;
@@ -32,7 +32,10 @@ public class RectangularMap implements IWorldMap {
         Vector2d origin = new Vector2d(0, 0);
         Vector2d boundary = new Vector2d(this.width - 1, this.height - 1);
 
-        return (position.follows(origin) && position.precedes(boundary));
+        if (position.follows(origin) && position.precedes(boundary)) {
+            return (!isOccupied(position));
+        }
+        return false;
     }
 
     @Override
@@ -48,12 +51,12 @@ public class RectangularMap implements IWorldMap {
     @Override
     public void run(MoveDirection[] directions) {
         for (int i = 0; i < directions.length; i++) {
-            int size  = animals.size();
+            int size = animals.size();
             Animal temp = animals.get(i % size);
 
-            map[temp.getPosition().x][temp.getPosition().x] = null;
-            animals.get(i % size).move(directions[i]);
-            map[temp.getPosition().x][temp.getPosition().x] = temp;
+            map[temp.getPosition().x][temp.getPosition().y] = null;
+            temp.move(directions[i]);
+            map[temp.getPosition().x][temp.getPosition().y] = temp;
         }
     }
 
