@@ -48,7 +48,8 @@ public class RectangularMap implements IWorldMap {
         return false;
     }
 
-    public void run(MoveDirection[] directions, boolean animate) {
+    @Override
+    public void run(MoveDirection[] directions) {
         for (int i = 0; i < directions.length; i++) {
             int size = animals.size();
             Animal temp = animals.get(i % size);
@@ -59,10 +60,6 @@ public class RectangularMap implements IWorldMap {
         }
     }
 
-    @Override
-    public void run(MoveDirection[] directions) {
-        run(directions, false);
-    }
 
     @Override
     public boolean isOccupied(Vector2d position) {
