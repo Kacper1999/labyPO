@@ -6,6 +6,8 @@ package agh.cs.lab2;
  *
  * @author apohllo
  */
+
+
 class MapVisualizer {
     private static final String EMPTY_CELL = " ";
     private static final String FRAME_SEGMENT = "-";

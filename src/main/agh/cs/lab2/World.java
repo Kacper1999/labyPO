@@ -19,6 +19,5 @@ public class World {
         map.run(directions);
 
         System.out.println(map);
-
     }
 }

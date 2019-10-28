@@ -48,8 +48,7 @@ public class RectangularMap implements IWorldMap {
         return false;
     }
 
-    @Override
-    public void run(MoveDirection[] directions) {
+    public void run(MoveDirection[] directions, boolean animate) {
         for (int i = 0; i < directions.length; i++) {
             int size = animals.size();
             Animal temp = animals.get(i % size);
@@ -58,6 +57,11 @@ public class RectangularMap implements IWorldMap {
             temp.move(directions[i]);
             map[temp.getPosition().x][temp.getPosition().y] = temp;
         }
+    }
+
+    @Override
+    public void run(MoveDirection[] directions) {
+        run(directions, false);
     }
 
     @Override

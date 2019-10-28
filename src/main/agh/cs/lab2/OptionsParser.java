@@ -3,10 +3,6 @@ package agh.cs.lab2;
 import java.util.Arrays;
 
 class OptionsParser {
-    OptionsParser() {
-
-    }
-
     MoveDirection[] parse(String[] args) {
         int len = args.length;
         MoveDirection[] result = new MoveDirection[len];
