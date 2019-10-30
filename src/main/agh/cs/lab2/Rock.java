@@ -1,6 +1,6 @@
 package agh.cs.lab2;
 
-public class Rock extends AbstractMapElement{
+public class Rock extends AbstractMapElement implements IMapElement{
     Rock(Vector2d position) {
         super(position);
     }

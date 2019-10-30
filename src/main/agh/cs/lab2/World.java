@@ -17,14 +17,14 @@ public class World {
 
         String[] orders = {"f", "l", "f", "r", "b", "f"};
 
-        List<Rock> rocks = new ArrayList<>();
+        List<IMapElement> rocks = new ArrayList<>();
         rocks.add(new Rock(new Vector2d(-4, -4)));
         rocks.add(new Rock(new Vector2d(7, 7)));
         rocks.add(new Rock(new Vector2d(3, 6)));
         rocks.add(new Rock(new Vector2d(2, 0)));
 
-        for (Rock rock : rocks) {
-            System.out.println(rock.position);
+        for (IMapElement mapElement : rocks) {
+            System.out.println(mapElement.getPosition());
         }
 
         MoveDirection[] directions = new OptionsParser().parse(args);

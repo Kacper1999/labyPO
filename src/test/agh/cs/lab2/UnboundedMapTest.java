@@ -8,7 +8,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class UnboundedMapTest {
-    private List<Rock> rocks = new ArrayList<>();
+    private List<IMapElement> rocks = new ArrayList<>();
     private Vector2d initialPosition = new Vector2d(2, 2);
     private UnboundedMap map = new UnboundedMap(rocks);
     private Animal testAnimal = new Animal(map, initialPosition);

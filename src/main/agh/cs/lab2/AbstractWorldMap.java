@@ -5,7 +5,7 @@ import java.util.List;
 
 public class AbstractWorldMap implements IWorldMap {
     private List<Animal> animals;
-    private List<Rock> rocks;
+    private List<IMapElement> mapElements;
     private int width;
     private int height;
     private Vector2d lowerLeftBoundary;
@@ -17,19 +17,19 @@ public class AbstractWorldMap implements IWorldMap {
         this(new ArrayList<>());
     }
 
-    AbstractWorldMap(List<Rock> rocks) {
-        this(rocks, false, 0, 0);
+    AbstractWorldMap(List<IMapElement> mapElements) {
+        this(mapElements, false, 0, 0);
     }
 
     AbstractWorldMap(int width, int height) {
         this(new ArrayList<>(), true, width, height);
     }
 
-    private AbstractWorldMap(List<Rock> rocks, boolean bounded, int width, int height) {
+    private AbstractWorldMap(List<IMapElement> mapElements, boolean bounded, int width, int height) {
         this.width = width;
         this.height = height;
         this.bounded = bounded;
-        this.rocks = rocks;
+        this.mapElements = mapElements;
         this.animals = new ArrayList<>();
         this.lowerLeftBoundary = calcLowerLeftBoundary();
         this.upperRightBoundary = calcUpperRightBoundary();
@@ -52,12 +52,12 @@ public class AbstractWorldMap implements IWorldMap {
             }
         }
 
-        for (Rock rock : rocks) {
-            if (rock.position.x > max_x) {
-                max_x = rock.position.x;
+        for (IMapElement mapElement : mapElements) {
+            if (mapElement.getPosition().x > max_x) {
+                max_x = mapElement.getPosition().x;
             }
-            if (rock.position.y > max_y) {
-                max_y = rock.position.y;
+            if (mapElement.getPosition().y > max_y) {
+                max_y = mapElement.getPosition().y;
             }
         }
         return new Vector2d(max_x, max_y);
@@ -80,12 +80,12 @@ public class AbstractWorldMap implements IWorldMap {
             }
         }
 
-        for (Rock rock : rocks) {
-            if (rock.position.x < min_x) {
-                min_x = rock.position.x;
+        for (IMapElement mapElement : mapElements) {
+            if (mapElement.getPosition().x < min_x) {
+                min_x = mapElement.getPosition().x;
             }
-            if (rock.position.y < min_y) {
-                min_y = rock.position.y;
+            if (mapElement.getPosition().y < min_y) {
+                min_y = mapElement.getPosition().y;
             }
         }
         return new Vector2d(min_x, min_y);
@@ -141,8 +141,8 @@ public class AbstractWorldMap implements IWorldMap {
                 return true;
             }
         }
-        for (Rock rock : rocks) {
-            if (rock.position.equals(position)) {
+        for (IMapElement mapElement : mapElements) {
+            if (mapElement.getPosition().equals(position)) {
                 return true;
             }
         }
@@ -156,9 +156,9 @@ public class AbstractWorldMap implements IWorldMap {
                 return animal;
             }
         }
-        for (Rock rock : rocks) {
-            if (rock.position.equals(position)) {
-                return rock;
+        for (IMapElement mapElement : mapElements) {
+            if (mapElement.getPosition().equals(position)) {
+                return mapElement;
             }
         }
         return null;

@@ -1,6 +1,6 @@
 package agh.cs.lab2;
 
-public class Animal extends AbstractMapElement {
+public class Animal extends AbstractMapElement implements IMapElement {
     private MapDirection direction = MapDirection.NORTH;
     private IWorldMap map;
 
