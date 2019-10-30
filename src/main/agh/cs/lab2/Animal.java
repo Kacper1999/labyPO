@@ -1,16 +1,15 @@
 package agh.cs.lab2;
 
-public class Animal {
+public class Animal extends AbstractMapElement {
     private MapDirection direction = MapDirection.NORTH;
-    private Vector2d position = new Vector2d(2, 2);
     private IWorldMap map;
 
     Animal(IWorldMap map) {
-        this.map = map;
+        this(map, new Vector2d(2,2));
     }
 
     Animal(IWorldMap map, Vector2d initialPosition) {
-        this.position = initialPosition;
+        super(initialPosition);
         this.map = map;
     }
 
@@ -29,16 +28,12 @@ public class Animal {
         }
     }
 
-    Vector2d getPosition() {
-        return (this.position);
-    }
-
     MapDirection getDirection() {
         return (this.direction);
     }
 
     void move(MoveDirection direction) {
-        Vector2d check;
+        Vector2d newPosition;
         switch (direction) {
             case RIGHT:
                 this.direction = this.direction.next();
@@ -47,15 +42,15 @@ public class Animal {
                 this.direction = this.direction.previous();
                 break;
             case BACKWARD:
-                check = this.position.subtract(this.direction.toUnitVector());
-                if (this.map.canMoveTo(check)) {
-                    this.position = check;
+                newPosition = this.position.subtract(this.direction.toUnitVector());
+                if (this.map.canMoveTo(newPosition)) {
+                    this.position = newPosition;
                 }
                 break;
             case FORWARD:
-                check = this.position.add(this.direction.toUnitVector());
-                if (this.map.canMoveTo(check)) {
-                    this.position = check;
+                newPosition = this.position.add(this.direction.toUnitVector());
+                if (this.map.canMoveTo(newPosition)) {
+                    this.position = newPosition;
                 }
                 break;
             default:
