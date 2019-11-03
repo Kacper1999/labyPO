@@ -3,7 +3,7 @@ package agh.cs.lab2;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AbstractWorldMap implements IWorldMap {
+public abstract class AbstractWorldMap implements IWorldMap {
     private List<Animal> animals;
     private List<IMapElement> mapElements;
     private int width;

@@ -1,6 +1,6 @@
 package agh.cs.lab2;
 
-public class AbstractMapElement implements IMapElement{
+public abstract class AbstractMapElement implements IMapElement{
     Vector2d position;
 
     AbstractMapElement(Vector2d position) {
