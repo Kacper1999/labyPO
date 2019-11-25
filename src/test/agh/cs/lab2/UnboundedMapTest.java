@@ -19,7 +19,7 @@ public class UnboundedMapTest {
 
     @Test
     public void canMoveToTest() {
-        rocks.add(new Rock(new Vector2d(1, 1)));
+        map.place(new Rock(new Vector2d(1, 1)));
         map.place(testAnimal);
         map.place(new Animal(map, new Vector2d(3, 4)));
 
@@ -34,19 +34,20 @@ public class UnboundedMapTest {
     public void placeTest() {
         assertTrue(map.place(testAnimal));
         assertTrue(map.place(new Animal(map, new Vector2d(3, 4))));
+    }
 
-        rocks.add(new Rock(new Vector2d(1, 1)));
+    @Test (expected = java.lang.IllegalArgumentException.class)
+    public void placeExceptionTest() {
+        map.place(new Rock(new Vector2d(1, 1)));
 
-        assertFalse(map.place(new Animal(map, new Vector2d(1, 1))));
-        assertFalse(map.place(new Animal(map, new Vector2d(3, 4))));
-        assertFalse(map.place(testAnimal));
+        map.place(new Animal(map, new Vector2d(1, 1)));
     }
 
     @Test
     public void runTest() {
         map.place(testAnimal);
-        rocks.add(new Rock(new Vector2d(1, 1)));
-        rocks.add(new Rock(new Vector2d(-3, -3)));
+        map.place(new Rock(new Vector2d(1, 1)));
+        map.place(new Rock(new Vector2d(-3, -3)));
 
         // Defining new animal that will be on a default map simultaneously with default animal
         Vector2d defMapInitialPosition_2 = new Vector2d(3, 4);
@@ -72,7 +73,7 @@ public class UnboundedMapTest {
     @Test
     public void objectAtTest() {
         Rock rock1 = new Rock(new Vector2d(1, 1));
-        rocks.add(rock1);
+        map.place(rock1);
 
         map.place(testAnimal);
         Animal secondAnimal = new Animal(map, new Vector2d(3, 4));
@@ -89,7 +90,7 @@ public class UnboundedMapTest {
     @Test
     public void isOccupiedTest() {
         map.place(testAnimal);
-        rocks.add(new Rock(new Vector2d(1, 1)));
+        map.place(new Rock(new Vector2d(1, 1)));
         map.place(new Animal(map, new Vector2d(3, 4)));
 
         assertTrue(map.isOccupied(initialPosition));
@@ -97,5 +98,26 @@ public class UnboundedMapTest {
         assertTrue(map.isOccupied(new Vector2d(1, 1)));
 
         assertFalse(map.isOccupied(new Vector2d(1, 3)));
+    }
+
+
+    @Test
+    public void calcBoundariesTest() {
+        map.place(testAnimal);
+        map.place(new Rock(new Vector2d(1, 1)));
+        assertEquals(new Vector2d(2, 2), map.calcUpperRightBoundary());
+        assertEquals(new Vector2d(1, 1), map.calcLowerLeftBoundary());
+
+        String[] TestString1 = {"b", "b"};
+        map.run(op.parse(TestString1));
+
+        assertEquals(new Vector2d(2, 1), map.calcUpperRightBoundary());
+        assertEquals(new Vector2d(1, 0), map.calcLowerLeftBoundary());
+
+        String[] TestString2 = {"l", "f", "f"};
+        map.run(op.parse(TestString2));
+
+        assertEquals(new Vector2d(1, 1), map.calcUpperRightBoundary());
+        assertEquals(new Vector2d(0, 0), map.calcLowerLeftBoundary());
     }
 }

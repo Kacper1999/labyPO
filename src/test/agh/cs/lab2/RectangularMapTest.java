@@ -30,9 +30,12 @@ public class RectangularMapTest {
     public void placeTest() {
         assertTrue(defMap.place(defTestAnimal));
         assertTrue(defMap.place(new Animal(defMap, new Vector2d(3, 4))));
+    }
 
-        assertFalse(defMap.place(new Animal(defMap, new Vector2d(3, 4))));
-        assertFalse(defMap.place(defTestAnimal));
+    @Test (expected = java.lang.IllegalArgumentException.class)
+    public void placeExceptionTest() {
+        defMap.place(defTestAnimal);
+        defMap.place(defTestAnimal);
     }
 
     @Test

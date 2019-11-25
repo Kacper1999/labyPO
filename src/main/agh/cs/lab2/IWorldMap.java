@@ -18,13 +18,13 @@ public interface IWorldMap {
     boolean canMoveTo(Vector2d position);
 
     /**
-     * Place a animal on the map.
+     * Place a element on the map, if this element is a animal then also add it to animals list
      *
-     * @param animal
-     *            The animal to place on the map.
-     * @return True if the animal was placed. The animal cannot be placed if the map is already occupied.
+     * @param mapElement
+     *            The element to place on the map.
+     * @return True if the element was placed. The element cannot be placed if the map is already occupied.
      */
-    boolean place(Animal animal);
+    boolean place(IMapElement mapElement);
 
     /**
      * Move the animal on the map according to the provided move directions. Every

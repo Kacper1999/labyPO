@@ -22,7 +22,7 @@ class OptionsParser {
                     result[j++] = MoveDirection.LEFT;
                     break;
                 default:
-                    break;
+                    throw new IllegalArgumentException(arg + " argument is invalid");
             }
         }
         return(Arrays.copyOfRange(result, 0, j));

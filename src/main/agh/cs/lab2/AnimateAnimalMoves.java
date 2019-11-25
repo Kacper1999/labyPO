@@ -42,7 +42,7 @@ class AnimateAnimalMoves extends JFrame {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             if (actionEvent.getSource() == button && directions.length > move) {
-                map.execute_order(directions[move], move);
+                map.executeOrder(directions[move], move);
                 move++;
                 textArea.setText("");
                 textArea.append(map.toString());

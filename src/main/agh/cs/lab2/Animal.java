@@ -1,5 +1,8 @@
 package agh.cs.lab2;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Animal extends AbstractMapElement implements IMapElement {
     private MapDirection direction = MapDirection.NORTH;
     private IWorldMap map;
@@ -42,15 +45,19 @@ public class Animal extends AbstractMapElement implements IMapElement {
                 this.direction = this.direction.previous();
                 break;
             case BACKWARD:
-                newPosition = this.position.subtract(this.direction.toUnitVector());
+                newPosition = this.getPosition().subtract(this.direction.toUnitVector());
                 if (this.map.canMoveTo(newPosition)) {
+                    Vector2d oldPosition = this.position;
                     this.position = newPosition;
+                    positionChanged(oldPosition);
                 }
                 break;
             case FORWARD:
-                newPosition = this.position.add(this.direction.toUnitVector());
+                newPosition = this.getPosition().add(this.direction.toUnitVector());
                 if (this.map.canMoveTo(newPosition)) {
+                    Vector2d oldPosition = this.position;
                     this.position = newPosition;
+                    positionChanged(oldPosition);
                 }
                 break;
             default:

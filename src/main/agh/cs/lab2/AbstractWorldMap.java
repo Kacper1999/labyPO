@@ -2,165 +2,80 @@ package agh.cs.lab2;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
 
-public abstract class AbstractWorldMap implements IWorldMap {
+public abstract class AbstractWorldMap implements IPositionChangeObserver, IWorldMap {
     private List<Animal> animals;
-    private List<IMapElement> mapElements;
-    private int width;
-    private int height;
-    private Vector2d lowerLeftBoundary;
-    private Vector2d upperRightBoundary;
-    private boolean bounded;
-
+    private HashMap<Vector2d, IMapElement> map;
 
     AbstractWorldMap() {
         this(new ArrayList<>());
     }
 
     AbstractWorldMap(List<IMapElement> mapElements) {
-        this(mapElements, false, 0, 0);
-    }
-
-    AbstractWorldMap(int width, int height) {
-        this(new ArrayList<>(), true, width, height);
-    }
-
-    private AbstractWorldMap(List<IMapElement> mapElements, boolean bounded, int width, int height) {
-        this.width = width;
-        this.height = height;
-        this.bounded = bounded;
-        this.mapElements = mapElements;
         this.animals = new ArrayList<>();
-        this.lowerLeftBoundary = calcLowerLeftBoundary();
-        this.upperRightBoundary = calcUpperRightBoundary();
-    }
-
-    private Vector2d calcUpperRightBoundary() {
-        if (this.bounded) {
-            return new Vector2d(width - 1, height - 1);
-        }
-
-        int max_x = Integer.MIN_VALUE;
-        int max_y = Integer.MIN_VALUE;
-
-        for (Animal animal : animals) {
-            if (animal.getPosition().x > max_x) {
-                max_x = animal.getPosition().x;
-            }
-            if (animal.getPosition().y > max_y) {
-                max_y = animal.getPosition().y;
-            }
-        }
+        this.map = new HashMap<>();
 
         for (IMapElement mapElement : mapElements) {
-            if (mapElement.getPosition().x > max_x) {
-                max_x = mapElement.getPosition().x;
-            }
-            if (mapElement.getPosition().y > max_y) {
-                max_y = mapElement.getPosition().y;
-            }
+            map.put(mapElement.getPosition(), mapElement);
         }
-        return new Vector2d(max_x, max_y);
     }
 
-    private Vector2d calcLowerLeftBoundary() {
-        if (this.bounded) {
-            return new Vector2d(0, 0);
-        }
+    protected abstract Vector2d calcUpperRightBoundary();
 
-        int min_x = Integer.MAX_VALUE;
-        int min_y = Integer.MAX_VALUE;
-
-        for (Animal animal : animals) {
-            if (animal.getPosition().x < min_x) {
-                min_x = animal.getPosition().x;
-            }
-            if (animal.getPosition().y < min_y) {
-                min_y = animal.getPosition().y;
-            }
-        }
-
-        for (IMapElement mapElement : mapElements) {
-            if (mapElement.getPosition().x < min_x) {
-                min_x = mapElement.getPosition().x;
-            }
-            if (mapElement.getPosition().y < min_y) {
-                min_y = mapElement.getPosition().y;
-            }
-        }
-        return new Vector2d(min_x, min_y);
-    }
+    protected abstract Vector2d calcLowerLeftBoundary();
 
 
     public String toString() {
-        this.lowerLeftBoundary = calcLowerLeftBoundary();
-        this.upperRightBoundary = calcUpperRightBoundary();
+        Vector2d lowerLeftBoundary = calcLowerLeftBoundary();
+        Vector2d upperRightBoundary = calcUpperRightBoundary();
         MapVisualizer temp = new MapVisualizer(this);
-        return temp.draw(this.lowerLeftBoundary, this.upperRightBoundary);
+        return temp.draw(lowerLeftBoundary, upperRightBoundary);
+    }
+
+    @Override
+    public void positionChanged(Vector2d oldPosition, Vector2d newPosition) {
+        IMapElement tmp = map.get(oldPosition);
+        map.remove(oldPosition);
+        map.put(newPosition, tmp);
     }
 
 
     @Override
-    public boolean canMoveTo(Vector2d position) {
-        if (this.bounded) {
-            if (position.follows(lowerLeftBoundary) && position.precedes(upperRightBoundary)) {
-                return (!isOccupied(position));
+    public boolean place(IMapElement mapElement) {
+        if (canMoveTo(mapElement.getPosition())) {
+            if (mapElement.getClass().equals(Animal.class)) {
+                animals.add((Animal) mapElement);
+                ((Animal) mapElement).addObserver(this);
             }
-            return false;
-        }
-        return !isOccupied(position);
-    }
 
-    @Override
-    public boolean place(Animal animal) {
-        if (canMoveTo(animal.getPosition())) {
-            animals.add(animal);
+            map.put(mapElement.getPosition(), mapElement);
             return true;
         }
-        return false;
+        throw new IllegalArgumentException("Invalid place coordinates");
     }
 
     @Override
     public void run(MoveDirection[] directions) {
         for (int i = 0; i < directions.length; i++) {
-            execute_order(directions[i], i);
+            executeOrder(directions[i], i);
         }
     }
 
-    void execute_order(MoveDirection direction, int which_move) {
+    void executeOrder(MoveDirection direction, int which_move) {
         int size = animals.size();
-        Animal temp = animals.get(which_move % size);
+        Animal animal = animals.get(which_move % size);
 
-        temp.move(direction);
+        animal.move(direction);
     }
 
     @Override
     public boolean isOccupied(Vector2d position) {
-        for (Animal animal : animals) {
-            if (animal.getPosition().equals(position)) {
-                return true;
-            }
-        }
-        for (IMapElement mapElement : mapElements) {
-            if (mapElement.getPosition().equals(position)) {
-                return true;
-            }
-        }
-        return false;
+        return objectAt(position) != null;
     }
 
     @Override
     public Object objectAt(Vector2d position) {
-        for (Animal animal : animals) {
-            if (animal.getPosition().equals(position)) {
-                return animal;
-            }
-        }
-        for (IMapElement mapElement : mapElements) {
-            if (mapElement.getPosition().equals(position)) {
-                return mapElement;
-            }
-        }
-        return null;
+        return map.get(position);
     }
 }
