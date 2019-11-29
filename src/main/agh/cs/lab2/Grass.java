@@ -1,8 +1,8 @@
 package agh.cs.lab2;
 
 public class Grass extends AbstractMapElement implements IMapElement {
-    Grass(Vector2d position) {
-        super(position);
+    Grass(IWorldMap map, Vector2d position) {
+        super(map, position);
     }
 
     public String toString() {

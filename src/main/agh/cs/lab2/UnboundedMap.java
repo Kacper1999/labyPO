@@ -9,8 +9,7 @@ class UnboundedMap extends AbstractWorldMap implements IWorldMap {
         super(mapElements);
         mapBoundary = new MapBoundary();
         for (IMapElement element : mapElements) {
-            ((AbstractMapElement) element).addObserver(mapBoundary);
-            mapBoundary.add(element.getPosition());
+            mapBoundary.add(element);
         }
     }
 
@@ -27,15 +26,9 @@ class UnboundedMap extends AbstractWorldMap implements IWorldMap {
     @Override
     public boolean place(IMapElement mapElement) {
         if (super.place(mapElement)) {
-            mapBoundary.add(mapElement.getPosition());
-            ((AbstractMapElement)mapElement).addObserver(mapBoundary);
+            mapBoundary.add(mapElement);
             return true;
         }
         return false;
-    }
-
-    @Override
-    public boolean canMoveTo(Vector2d position) {
-        return !isOccupied(position);
     }
 }

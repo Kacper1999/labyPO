@@ -46,7 +46,9 @@ public class MapBoundary implements IPositionChangeObserver {
         orderedByX.add(newPosition);
     }
 
-    void add(Vector2d v) {
+    void add(IMapElement iMapElement) {
+        ((AbstractMapElement)iMapElement).addObserver(this);
+        Vector2d v = iMapElement.getPosition();
         orderedByX.add(v);
         orderedByY.add(v);
     }

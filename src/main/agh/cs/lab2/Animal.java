@@ -12,7 +12,7 @@ public class Animal extends AbstractMapElement implements IMapElement {
     }
 
     Animal(IWorldMap map, Vector2d initialPosition) {
-        super(initialPosition);
+        super(map, initialPosition);
         this.map = map;
     }
 
@@ -35,9 +35,9 @@ public class Animal extends AbstractMapElement implements IMapElement {
         return (this.direction);
     }
 
-    void move(MoveDirection direction) {
+    void move(MoveDirection moveDirection) {
         Vector2d newPosition;
-        switch (direction) {
+        switch (moveDirection) {
             case RIGHT:
                 this.direction = this.direction.next();
                 break;
@@ -45,7 +45,7 @@ public class Animal extends AbstractMapElement implements IMapElement {
                 this.direction = this.direction.previous();
                 break;
             case BACKWARD:
-                newPosition = this.getPosition().subtract(this.direction.toUnitVector());
+                newPosition = this.map.newPosition(this.position, this.direction.toUnitVector(), moveDirection);
                 if (this.map.canMoveTo(newPosition)) {
                     Vector2d oldPosition = this.position;
                     this.position = newPosition;

@@ -19,7 +19,7 @@ public class UnboundedMapTest {
 
     @Test
     public void canMoveToTest() {
-        map.place(new Rock(new Vector2d(1, 1)));
+        map.place(new Rock(map, new Vector2d(1, 1)));
         map.place(testAnimal);
         map.place(new Animal(map, new Vector2d(3, 4)));
 
@@ -38,7 +38,7 @@ public class UnboundedMapTest {
 
     @Test (expected = java.lang.IllegalArgumentException.class)
     public void placeExceptionTest() {
-        map.place(new Rock(new Vector2d(1, 1)));
+        map.place(new Rock(map, new Vector2d(1, 1)));
 
         map.place(new Animal(map, new Vector2d(1, 1)));
     }
@@ -46,8 +46,8 @@ public class UnboundedMapTest {
     @Test
     public void runTest() {
         map.place(testAnimal);
-        map.place(new Rock(new Vector2d(1, 1)));
-        map.place(new Rock(new Vector2d(-3, -3)));
+        map.place(new Rock(map, new Vector2d(1, 1)));
+        map.place(new Rock(map, new Vector2d(-3, -3)));
 
         // Defining new animal that will be on a default map simultaneously with default animal
         Vector2d defMapInitialPosition_2 = new Vector2d(3, 4);
@@ -72,7 +72,7 @@ public class UnboundedMapTest {
 
     @Test
     public void objectAtTest() {
-        Rock rock1 = new Rock(new Vector2d(1, 1));
+        Rock rock1 = new Rock(map, new Vector2d(1, 1));
         map.place(rock1);
 
         map.place(testAnimal);
@@ -90,7 +90,7 @@ public class UnboundedMapTest {
     @Test
     public void isOccupiedTest() {
         map.place(testAnimal);
-        map.place(new Rock(new Vector2d(1, 1)));
+        map.place(new Rock(map, new Vector2d(1, 1)));
         map.place(new Animal(map, new Vector2d(3, 4)));
 
         assertTrue(map.isOccupied(initialPosition));
@@ -104,7 +104,7 @@ public class UnboundedMapTest {
     @Test
     public void calcBoundariesTest() {
         map.place(testAnimal);
-        map.place(new Rock(new Vector2d(1, 1)));
+        map.place(new Rock(map, new Vector2d(1, 1)));
         assertEquals(new Vector2d(2, 2), map.calcUpperRightBoundary());
         assertEquals(new Vector2d(1, 1), map.calcLowerLeftBoundary());
 

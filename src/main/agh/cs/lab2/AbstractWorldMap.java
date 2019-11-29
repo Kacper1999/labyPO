@@ -25,6 +25,19 @@ public abstract class AbstractWorldMap implements IPositionChangeObserver, IWorl
 
     protected abstract Vector2d calcLowerLeftBoundary();
 
+    @Override
+    public Vector2d newPosition(Vector2d oldPosition, Vector2d move, MoveDirection moveDirection) {
+        // will not work if moveDirection is other than forward backward
+        Vector2d newPosition;
+        if (moveDirection == MoveDirection.FORWARD) {
+            newPosition = oldPosition.add(move);
+        } else {
+            newPosition = oldPosition.subtract(move);
+        }
+        if (!isOccupied(newPosition))
+            return newPosition;
+        return oldPosition;
+    }
 
     public String toString() {
         Vector2d lowerLeftBoundary = calcLowerLeftBoundary();
@@ -48,7 +61,6 @@ public abstract class AbstractWorldMap implements IPositionChangeObserver, IWorl
                 animals.add((Animal) mapElement);
                 ((Animal) mapElement).addObserver(this);
             }
-
             map.put(mapElement.getPosition(), mapElement);
             return true;
         }
@@ -65,8 +77,12 @@ public abstract class AbstractWorldMap implements IPositionChangeObserver, IWorl
     void executeOrder(MoveDirection direction, int which_move) {
         int size = animals.size();
         Animal animal = animals.get(which_move % size);
-
         animal.move(direction);
+    }
+
+    @Override
+    public boolean canMoveTo(Vector2d position) {
+        return !isOccupied(position);
     }
 
     @Override
