@@ -15,6 +15,19 @@ public class RectangularMapTest {
 
 
     @Test
+    public void placeTest() {
+        assertTrue(defMap.place(defTestAnimal));
+        assertTrue(defMap.place(new Animal(defMap, new Vector2d(3, 4))));
+        // putting animal on sth throws exception and is tested below
+    }
+
+    @Test(expected = java.lang.IllegalArgumentException.class)
+    public void placeExceptionTest() {
+        defMap.place(defTestAnimal);
+        defMap.place(defTestAnimal);
+    }
+
+    @Test
     public void canMoveToTest() {
         defMap.place(defTestAnimal);
         defMap.place(new Animal(defMap, new Vector2d(3, 4)));
@@ -26,17 +39,6 @@ public class RectangularMapTest {
         assertFalse(defMap.canMoveTo(new Vector2d(8, 0)));
     }
 
-    @Test
-    public void placeTest() {
-        assertTrue(defMap.place(defTestAnimal));
-        assertTrue(defMap.place(new Animal(defMap, new Vector2d(3, 4))));
-    }
-
-    @Test (expected = java.lang.IllegalArgumentException.class)
-    public void placeExceptionTest() {
-        defMap.place(defTestAnimal);
-        defMap.place(defTestAnimal);
-    }
 
     @Test
     public void runTest() {
@@ -48,20 +50,16 @@ public class RectangularMapTest {
         defMap.place(defMapAnimal_2);
 
         // Two tests on a default map
-        String[] defMapTestString_1 = {"f", "l", "f", "f", "f", "f"};
+        String[] defMapTestString_1 = {"f", "f", "f", "l", "f", "l"};
         defMap.run(op.parse(defMapTestString_1));
         assertEquals(new Vector2d(2, 4), defTestAnimal.getPosition());
-        assertEquals(MapDirection.NORTH, defTestAnimal.getDirection());
         assertEquals(new Vector2d(3, 4), defMapAnimal_2.getPosition());
-        assertEquals(MapDirection.WEST, defMapAnimal_2.getDirection());
 
 
         String[] defMapTestString_2 = {"b", "l", "b", "f", "b", "f", "b", "f", "b", "r", "b", "f", "f", "f"};
         defMap.run(op.parse((defMapTestString_2)));
-        assertEquals(new Vector2d(2, 0), defTestAnimal.getPosition());
-        assertEquals(MapDirection.NORTH, defTestAnimal.getDirection());
-        assertEquals(new Vector2d(1, 1), defMapAnimal_2.getPosition());
-        assertEquals(MapDirection.WEST, defMapAnimal_2.getDirection());
+        assertEquals(new Vector2d(2, 1), defTestAnimal.getPosition());
+        assertEquals(new Vector2d(3, 4), defMapAnimal_2.getPosition());
 
 
         // Two tests on a new map
@@ -69,26 +67,22 @@ public class RectangularMapTest {
         int height_1 = 5;
         RectangularMap map = new RectangularMap(width_1, height_1);
 
-        Vector2d initialPosition_1 = new Vector2d(3, 4);
-        Animal testAnimal_1 = new Animal(map, initialPosition_1);
-        Animal testAnimal_2 = new Animal(map); // initial position = [2, 2]
+        Vector2d initialPosition_2 = new Vector2d(3, 4);
+        Animal testAnimal_1 = new Animal(map); // initial position = [2, 2]
+        Animal testAnimal_2 = new Animal(map, initialPosition_2);
         map.place(testAnimal_1);
         map.place(testAnimal_2);
 
 
         String[] testString_1 = {"f", "b", "r", "l", "f", "f", "r", "r", "f", "f", "f", "f", "f", "f", "f", "f"};
         map.run(op.parse(testString_1));
-        assertEquals(new Vector2d(4, 0), testAnimal_1.getPosition());
-        assertEquals(MapDirection.SOUTH, testAnimal_1.getDirection());
-        assertEquals(new Vector2d(1, 4), testAnimal_2.getPosition());
-        assertEquals(MapDirection.NORTH, testAnimal_2.getDirection());
+        assertEquals(new Vector2d(2, 4), testAnimal_1.getPosition());
+        assertEquals(new Vector2d(4, 4), testAnimal_2.getPosition());
 
         String[] testString_2 = {"b", "b", "b", "b", "r", "l", "f", "b", "f", "f"};
         map.run(op.parse(testString_2));
-        assertEquals(new Vector2d(3, 2), testAnimal_1.getPosition());
-        assertEquals(MapDirection.WEST, testAnimal_1.getDirection());
-        assertEquals(new Vector2d(1, 2), testAnimal_2.getPosition());
-        assertEquals(MapDirection.WEST, testAnimal_2.getDirection());
+        assertEquals(new Vector2d(3, 4), testAnimal_1.getPosition());
+        assertEquals(new Vector2d(4, 2), testAnimal_2.getPosition());
     }
 
     @Test

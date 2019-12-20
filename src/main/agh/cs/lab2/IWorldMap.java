@@ -27,10 +27,9 @@ public interface IWorldMap {
      *
      * @param oldPosition old position of an object
      * @param move the move object wants to do (moving up (0, 1) left(1, 0) e.t.c)
-     * @param moveDirection does the object wants to move MoveDirection.FORWARD
      * @return new position on map or the same if object can't move to desired position
      */
-    Vector2d newPosition(Vector2d oldPosition, Vector2d move, MoveDirection moveDirection);
+    Vector2d newPosition(Vector2d oldPosition, Vector2d move);
 
     /**
      * Move the animal on the map according to the provided move directions. Every
@@ -57,4 +56,11 @@ public interface IWorldMap {
      * @return Object or null if the position is not occupied.
      */
     Object objectAt(Vector2d position);
+
+    /**
+     * Removes given object.
+     *
+     * @param mapElement object to be removed.
+     */
+    void remove(IMapElement mapElement);
 }

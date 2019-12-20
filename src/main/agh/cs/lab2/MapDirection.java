@@ -15,25 +15,25 @@ enum MapDirection {
             case NORTH:
                 return "North";
             case NORTHEAST:
-                return "Northeast";
+                return "North-east";
             case EAST:
                 return "East";
             case SOUTHEAST:
-                return "Southeast";
+                return "South-east";
             case SOUTH:
                 return "South";
             case SOUTHWEST:
-                return "Southwest";
+                return "South-west";
             case WEST:
                 return "West";
             case NORTHWEST:
-                return "Northwest";
+                return "North-west";
             default:
                 return "";
         }
     }
 
-    Vector2d toUnitVector() {
+    Vector2d toVector() {
         switch (this) {
             case NORTH:
                 return new Vector2d(0, 1);
@@ -56,15 +56,23 @@ enum MapDirection {
         }
     }
 
-    MapDirection next() {  // next() and previous() doesn't support northeast e.t.c
+    MapDirection next() {
         switch (this) {
             case NORTH:
+                return NORTHEAST;
+            case NORTHEAST:
                 return EAST;
             case EAST:
+                return SOUTHEAST;
+            case SOUTHEAST:
                 return SOUTH;
             case SOUTH:
+                return SOUTHWEST;
+            case SOUTHWEST:
                 return WEST;
             case WEST:
+                return NORTHWEST;
+            case NORTHWEST:
                 return NORTH;
             default:
                 return this;
@@ -74,15 +82,35 @@ enum MapDirection {
     MapDirection previous() {
         switch (this) {
             case NORTH:
+                return NORTHWEST;
+            case NORTHWEST:
                 return WEST;
-            case EAST:
-                return NORTH;
-            case SOUTH:
-                return EAST;
             case WEST:
+                return SOUTHWEST;
+            case SOUTHWEST:
                 return SOUTH;
+            case SOUTH:
+                return SOUTHEAST;
+            case SOUTHEAST:
+                return EAST;
+            case EAST:
+                return NORTHEAST;
+            case NORTHEAST:
+                return NORTH;
             default:
                 return this;
         }
+    }
+
+    MapDirection rotatedByNTimes45(int n) {
+        return this.rotatedBy(Rotation.values()[n]);
+    }
+
+    MapDirection rotatedBy(Rotation rotation) {
+        MapDirection result = this;
+        for (int i = 0; i < rotation.ordinal(); i++) {
+            result = result.next();
+        }
+        return result;
     }
 }

@@ -1,8 +1,5 @@
 package agh.cs.lab2;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Animal extends AbstractMapElement implements IMapElement {
     private MapDirection direction = MapDirection.NORTH;
     private IWorldMap map;
@@ -20,12 +17,20 @@ public class Animal extends AbstractMapElement implements IMapElement {
         switch (this.direction) {
             case NORTH:
                 return ("N");
-            case SOUTH:
-                return ("S");
+            case NORTHEAST:
+                return "NE";
             case EAST:
                 return ("E");
+            case SOUTHEAST:
+                return ("SE");
+            case SOUTH:
+                return ("S");
+            case SOUTHWEST:
+                return ("SW");
             case WEST:
                 return ("W");
+            case NORTHWEST:
+                return ("NW");
             default:
                 return ("");
         }
@@ -35,17 +40,35 @@ public class Animal extends AbstractMapElement implements IMapElement {
         return (this.direction);
     }
 
+    void rotate(Rotation rotation) {
+        this.direction = this.direction.rotatedBy(rotation);
+    }
+
     void move(MoveDirection moveDirection) {
         Vector2d newPosition;
+        MapDirection tmpDirection;
         switch (moveDirection) {
             case RIGHT:
-                this.direction = this.direction.next();
+                tmpDirection = this.direction.rotatedBy(Rotation.ROTATE90);
+                newPosition = this.map.newPosition(this.position, tmpDirection.toVector());
+                if (this.map.canMoveTo(newPosition)) {
+                    Vector2d oldPosition = this.position;
+                    this.position = newPosition;
+                    positionChanged(oldPosition);
+                }
                 break;
             case LEFT:
-                this.direction = this.direction.previous();
+                tmpDirection = this.direction.rotatedBy(Rotation.ROTATE270);
+                newPosition = this.map.newPosition(this.position, tmpDirection.toVector());
+                if (this.map.canMoveTo(newPosition)) {
+                    Vector2d oldPosition = this.position;
+                    this.position = newPosition;
+                    positionChanged(oldPosition);
+                }
                 break;
             case BACKWARD:
-                newPosition = this.map.newPosition(this.position, this.direction.toUnitVector(), moveDirection);
+                tmpDirection = this.direction.rotatedBy(Rotation.ROTATE180);
+                newPosition = this.map.newPosition(this.position, tmpDirection.toVector());
                 if (this.map.canMoveTo(newPosition)) {
                     Vector2d oldPosition = this.position;
                     this.position = newPosition;
@@ -53,7 +76,7 @@ public class Animal extends AbstractMapElement implements IMapElement {
                 }
                 break;
             case FORWARD:
-                newPosition = this.getPosition().add(this.direction.toUnitVector());
+                newPosition = this.map.newPosition(this.position, this.direction.toVector());
                 if (this.map.canMoveTo(newPosition)) {
                     Vector2d oldPosition = this.position;
                     this.position = newPosition;

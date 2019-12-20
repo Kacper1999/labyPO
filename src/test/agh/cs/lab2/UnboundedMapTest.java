@@ -16,7 +16,6 @@ public class UnboundedMapTest {
     private OptionsParser op = new OptionsParser();
 
 
-
     @Test
     public void canMoveToTest() {
         map.place(new Rock(map, new Vector2d(1, 1)));
@@ -36,7 +35,7 @@ public class UnboundedMapTest {
         assertTrue(map.place(new Animal(map, new Vector2d(3, 4))));
     }
 
-    @Test (expected = java.lang.IllegalArgumentException.class)
+    @Test(expected = java.lang.IllegalArgumentException.class)
     public void placeExceptionTest() {
         map.place(new Rock(map, new Vector2d(1, 1)));
 
@@ -54,20 +53,16 @@ public class UnboundedMapTest {
         Animal defMapAnimal_2 = new Animal(map, defMapInitialPosition_2);
         map.place(defMapAnimal_2);
 
-        String[] defMapTestString_1 = {"f", "l", "f", "f", "f", "f"};
+        String[] defMapTestString_1 = {"b", "l", "l", "b", "l", "b", "l", "b"};
         map.run(op.parse(defMapTestString_1));
-        assertEquals(new Vector2d(2, 5), testAnimal.getPosition());
-        assertEquals(MapDirection.NORTH, testAnimal.getDirection());
-        assertEquals(new Vector2d(2, 4), defMapAnimal_2.getPosition());
-        assertEquals(MapDirection.WEST, defMapAnimal_2.getDirection());
+        assertEquals(new Vector2d(2, 1), testAnimal.getPosition());
+        assertEquals(new Vector2d(2, 2), defMapAnimal_2.getPosition());
 
 
-        String[] defMapTestString_2 = {"f", "f", "b", "l", "l", "f", "l", "f", "l", "f"};
+        String[] defMapTestString_2 = {"b", "b", "b", "l", "b", "b", "b", "b", "l", "b", "l", "b", "l", "b"};
         map.run(op.parse((defMapTestString_2)));
-        assertEquals(new Vector2d(2, 5), testAnimal.getPosition());
-        assertEquals(MapDirection.EAST, testAnimal.getDirection());
-        assertEquals(new Vector2d(1, 2), defMapAnimal_2.getPosition());
-        assertEquals(MapDirection.SOUTH, defMapAnimal_2.getDirection());
+        assertEquals(new Vector2d(-1, -3), testAnimal.getPosition());
+        assertEquals(new Vector2d(2, -4), defMapAnimal_2.getPosition());
     }
 
     @Test
@@ -114,7 +109,7 @@ public class UnboundedMapTest {
         assertEquals(new Vector2d(2, 1), map.calcUpperRightBoundary());
         assertEquals(new Vector2d(1, 0), map.calcLowerLeftBoundary());
 
-        String[] TestString2 = {"l", "f", "f"};
+        String[] TestString2 = {"l", "l"};
         map.run(op.parse(TestString2));
 
         assertEquals(new Vector2d(1, 1), map.calcUpperRightBoundary());

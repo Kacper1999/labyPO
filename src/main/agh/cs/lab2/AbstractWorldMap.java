@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.HashMap;
 
 public abstract class AbstractWorldMap implements IPositionChangeObserver, IWorldMap {
-    private List<Animal> animals;
+    List<Animal> animals;
     private HashMap<Vector2d, IMapElement> map;
 
     AbstractWorldMap() {
@@ -25,20 +25,6 @@ public abstract class AbstractWorldMap implements IPositionChangeObserver, IWorl
 
     protected abstract Vector2d calcLowerLeftBoundary();
 
-    @Override
-    public Vector2d newPosition(Vector2d oldPosition, Vector2d move, MoveDirection moveDirection) {
-        // will not work if moveDirection is other than forward backward
-        Vector2d newPosition;
-        if (moveDirection == MoveDirection.FORWARD) {
-            newPosition = oldPosition.add(move);
-        } else {
-            newPosition = oldPosition.subtract(move);
-        }
-        if (!isOccupied(newPosition))
-            return newPosition;
-        return oldPosition;
-    }
-
     public String toString() {
         Vector2d lowerLeftBoundary = calcLowerLeftBoundary();
         Vector2d upperRightBoundary = calcUpperRightBoundary();
@@ -47,12 +33,19 @@ public abstract class AbstractWorldMap implements IPositionChangeObserver, IWorl
     }
 
     @Override
+    public Vector2d newPosition(Vector2d oldPosition, Vector2d move) {
+        Vector2d newPosition = oldPosition.add(move);
+        if (!isOccupied(newPosition))
+            return newPosition;
+        return oldPosition;
+    }
+
+    @Override
     public void positionChanged(Vector2d oldPosition, Vector2d newPosition) {
         IMapElement tmp = map.get(oldPosition);
         map.remove(oldPosition);
         map.put(newPosition, tmp);
     }
-
 
     @Override
     public boolean place(IMapElement mapElement) {
@@ -75,8 +68,7 @@ public abstract class AbstractWorldMap implements IPositionChangeObserver, IWorl
     }
 
     void executeOrder(MoveDirection direction, int which_move) {
-        int size = animals.size();
-        Animal animal = animals.get(which_move % size);
+        Animal animal = animals.get(which_move % animals.size());
         animal.move(direction);
     }
 
@@ -92,6 +84,14 @@ public abstract class AbstractWorldMap implements IPositionChangeObserver, IWorl
 
     @Override
     public Object objectAt(Vector2d position) {
-        return map.get(position);
+        return this.map.get(position);
+    }
+
+    @Override
+    public void remove(IMapElement mapElement) {
+        if (mapElement.getClass() == Animal.class) {
+            this.animals.remove(mapElement);
+        }
+        this.map.remove(mapElement.getPosition());
     }
 }
